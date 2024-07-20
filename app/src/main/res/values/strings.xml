@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Moon Phases</string>
+    <string name="Title">Moon Phase</string>
+    <string name="new_moon">New Moon</string>
+    <string name="waxing_crescent">Waxing Crescent</string>
+    <string name="first_quarter">First Quarter</string>
+    <string name="waxing_gibbous">Waxing Gibbous</string>
+    <string name="full_moon">Full Moon</string>
+    <string name="waning_gibbous">Waning Gibbous</string>
+    <string name="third_quarter">Third Quarter</string>
+    <string name="waning_crescent">Waning Crescent</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">Moon Widget</string>
+</resources>

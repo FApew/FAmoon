@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fasi Lunari</string>
+    <string name="Title">Fase Lunare</string>
+    <string name="new_moon">Luna nuova</string>
+    <string name="waxing_crescent">Luna Crescente</string>
+    <string name="first_quarter">Primo Quarto</string>
+    <string name="waxing_gibbous">Gibbosa Crescente</string>
+    <string name="full_moon">Luna Piena</string>
+    <string name="waning_gibbous">Gibbosa Calante</string>
+    <string name="third_quarter">Terzo Quarto</string>
+    <string name="waning_crescent">Luna Calante</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">Moon Widget</string>
+</resources>
