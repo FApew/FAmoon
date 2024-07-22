@@ -12,12 +12,12 @@ import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.os.Handler
 import android.os.Looper
-import android.preference.PreferenceManager
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
 import android.text.style.TextAppearanceSpan
 import android.widget.RemoteViews
+import androidx.preference.PreferenceManager
 import androidx.core.content.res.ResourcesCompat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -49,8 +49,8 @@ private fun clock(context: Context, appWidgetManager: AppWidgetManager, appWidge
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     val views = RemoteViews(context.packageName, R.layout.moon_phases)
-    val moonAge = ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 6), LocalDate.now())
-    val percentage = MainActivity().getFraction(MainActivity().julianDate(Date().time.toDouble())) * 100
+    val moonAge = ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 6), LocalDate.now()).toDouble()
+    val percentage = MainActivity().getFraction(MainActivity().jDate(Date().time.toDouble())) * 100
     val phase = MainActivity().getPhase(context, moonAge)
     val dir = MainActivity().getDir(phase[1] as Int, moonAge, percentage)
     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

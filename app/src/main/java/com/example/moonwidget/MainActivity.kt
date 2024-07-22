@@ -15,12 +15,12 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.RectF
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.preference.PreferenceManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.time.LocalDate
@@ -42,6 +42,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imageMoon: ImageView
     private lateinit var phaseText: TextView
     private lateinit var illPerc: TextView
+    private lateinit var ageTxt: TextView
+    private lateinit var fullTtxt: TextView
+    private lateinit var newTtxt: TextView
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var clock: ImageButton
     private lateinit var yup: ImageButton
@@ -68,22 +71,25 @@ class MainActivity : AppCompatActivity() {
         imageMoon = findViewById(R.id.moonIcon)
         phaseText = findViewById(R.id.phaseText)
         illPerc = findViewById(R.id.illPerc)
-        clock = findViewById(R.id.clock)
-        yup = findViewById(R.id.YUP)
-        mup = findViewById(R.id.MUP)
-        dup = findViewById(R.id.DUP)
-        hup = findViewById(R.id.HUP)
-        mmup = findViewById(R.id.mUP)
-        ydw = findViewById(R.id.YDW)
-        mdw = findViewById(R.id.MDW)
-        ddw = findViewById(R.id.DDW)
-        hdw = findViewById(R.id.HDW)
-        mmdw = findViewById(R.id.mDW)
-        ytxt  = findViewById(R.id.Ytxt)
-        mtxt  = findViewById(R.id.Mtxt)
-        dtxt  = findViewById(R.id.Dtxt)
-        htxt  = findViewById(R.id.Htxt)
-        mmtxt  = findViewById(R.id.mtxt)
+        ageTxt = findViewById(R.id.ageTxt)
+        fullTtxt = findViewById(R.id.fullTtxt)
+        newTtxt = findViewById(R.id.newTtxt)
+        clock = findViewById(R.id.resetClock)
+        yup = findViewById(R.id.yU)
+        mup = findViewById(R.id.mU)
+        dup = findViewById(R.id.dU)
+        hup = findViewById(R.id.hU)
+        mmup = findViewById(R.id.mmU)
+        ydw = findViewById(R.id.yD)
+        mdw = findViewById(R.id.mD)
+        ddw = findViewById(R.id.dD)
+        hdw = findViewById(R.id.hD)
+        mmdw = findViewById(R.id.mmD)
+        ytxt  = findViewById(R.id.yTxt)
+        mtxt  = findViewById(R.id.mTxt)
+        dtxt  = findViewById(R.id.dTxt)
+        htxt  = findViewById(R.id.hTxt)
+        mmtxt  = findViewById(R.id.mmTxt)
 
         clock.setOnClickListener {sync()}
         yup.setOnClickListener {arrow(0)}
@@ -104,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     private val mLength = intArrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 29)
     private var time = true
     private var editDate = intArrayOf()
-    private val newMoon = R.drawable.newm
+    private val newMoon = R.drawable.dark
     private val timer = Timer()
 
     override fun onDestroy() {
@@ -113,7 +119,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clock() {
-        timer.scheduleAtFixedRate(object : TimerTask() {
+        timer.schedule(object : TimerTask() {
             override fun run() {
                 main()
             }
@@ -125,16 +131,15 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = sharedPreferences.edit()
         var date = LocalDateTime.now()
-        println(time)
         if (time) {
             val curDate = LocalDateTime.now()
             editDate = intArrayOf(curDate.year, curDate.monthValue, curDate.dayOfMonth, curDate.hour, curDate.minute)
             runOnUiThread {
-                ytxt.text = "${editDate[0]}"
-                mtxt.text = "${editDate[1]}"
-                dtxt.text = "${editDate[2]}"
-                htxt.text = "${editDate[3]}"
-                mmtxt.text = "${editDate[4]}"
+                ytxt.text = "000${editDate[0]}".takeLast(4)
+                mtxt.text = "0${editDate[1]}".takeLast(2)
+                dtxt.text = "0${editDate[2]}".takeLast(2)
+                htxt.text = "0${editDate[3]}".takeLast(2)
+                mmtxt.text = "0${editDate[4]}".takeLast(2)
             }
         } else {
             date = LocalDateTime.of(editDate[0], editDate[1], editDate[2], editDate[3], editDate[4], 0)
@@ -151,16 +156,24 @@ class MainActivity : AppCompatActivity() {
             val lat = sharedPreferences.getFloat("latitude", 0.0f).toDouble()
             val long = sharedPreferences.getFloat("longitude", 0.0f).toDouble()
 
-            val moonAge = ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 6), date)
-            val percentage = (getFraction(julianDate(Date.from(date.toInstant(getTimeZoneOffset(long))).time.toDouble())) * 100)
+            var moonAge = ChronoUnit.MINUTES.between(LocalDateTime.of(2024, 8, 4, 13, 13, 0), date).toDouble()/(60*24)
+            if (moonAge < 0) {
+                moonAge += 29.530588
+            }
+            val percentage = (getFraction(jDate(Date.from(date.toInstant(getTimeZoneOffset(long))).time.toDouble())) * 100)
             val phase = getPhase(this, moonAge)
             val dir = getDir(phase[1] as Int, moonAge, percentage)
-            val sunPosition = calculateSunPosition(LocalDateTime.now(), lat, long)
+            val sunPosition = calculateSunPosition(date, lat, long)
             val moonPosition = calculateMoonPosition(date, lat, long)
             val clipMoon = clipMoon(this, newMoon, (percentage*100).roundToInt().toFloat()/100, dir, getAngle(moonPosition.first, moonPosition.second, sunPosition.first, sunPosition.second).toFloat() - 90)
-            val moonIcon = overlapBitmapsAndRotate(BitmapFactory.decodeResource(this.resources, R.drawable.full), clipMoon)
-            println(date)
+            val moonIcon = overlapBitmapsAndRotate(BitmapFactory.decodeResource(this.resources, R.drawable.light), clipMoon)
+            val dates = getMoons(date, long)
+
+            println(dates.first)
+            println(dates.second)
+
             try {
+                //Update Phase
                 imageMoon.setImageBitmap(moonIcon)
                 phaseText.text = phase[0] as CharSequence
                 if (percentage.roundToInt().toDouble() != ((percentage*100).roundToInt().toDouble()/100)) {
@@ -168,16 +181,44 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     illPerc.text = "${percentage.roundToInt()}%"
                 }
+
+                //Update Age
+                ageTxt.text = "${((moonAge % 29.530588)*100).roundToInt().toDouble()/100}d ${this.getString(R.string.outOf)} 29.53"
+                newTtxt.text = "0${dates.first.dayOfMonth}".takeLast(2) + "/" + "0${dates.first.monthValue}".takeLast(2) + "- ${dates.first.hour}:00"
+                fullTtxt.text = "0${dates.second.dayOfMonth}".takeLast(2) + "/" + "0${dates.second.monthValue}".takeLast(2) +  "- ${dates.second.hour}:00"
             } catch (_: Exception) {}
         }
     }
 
-    fun julianDate(time: Double): Double {
-        return (time / 86400000) + 2440587.5
+    fun getMoons(date: LocalDateTime, long: Double): Pair<LocalDateTime, LocalDateTime> {
+        var max = 0.0
+        var newDate = date
+        var min = 1.0
+        var fullDate = date
+
+        for (i in 0 .. 800) {
+            val tempDate = date.plusHours(i.toLong())
+            var p = getFraction(jDate(Date.from(tempDate.toInstant(getTimeZoneOffset(long))).time.toDouble()))
+
+            if (p < min) {
+                min = p
+                newDate = tempDate
+            }
+            if (p > max) {
+                max = p
+                fullDate = tempDate
+            }
+        }
+
+        return Pair(newDate, fullDate)
     }
 
-    private fun constrain(day: Double): Double {
-        var t = day%360
+    fun jDate(t: Double): Double {
+        return (t / 86400000) + 2440587.5
+    }
+
+    private fun cnt(d: Double): Double {
+        var t = d%360
         if (t<0) { t+=360 }
         return t
     }
@@ -185,10 +226,10 @@ class MainActivity : AppCompatActivity() {
     fun getFraction(jDate: Double): Double {
         val toRad = PI / 180
         val t = (jDate - 2451545) / 36525
-        val d = constrain(297.8501921 + 445267.1114034 * t - 0.0018819 * t * t + 1.0 / 545868.0 * t * t * t - 1.0 / 113065000.0 * t * t * t * t) * toRad
-        val m = constrain(357.5291092 + 35999.0502909 * t - 0.0001536 * t * t + 1.0 / 24490000.0 * t * t * t) * toRad
-        val mP = constrain(134.9633964 + 477198.8675055 * t + 0.0087414 * t * t + 1.0 / 69699.0 * t * t * t - 1.0 / 14712000.0 * t * t * t * t) * toRad
-        val i = constrain(180 - d * 180 / Math.PI - 6.289 * sin(mP) + 2.1 * sin(m) - 1.274 * sin(2 * d - mP) - 0.658 * sin(2 * d) - 0.214 * sin(2 * mP) - 0.11 * sin(d)) * toRad
+        val d = cnt(297.8501921 + 445267.1114034 * t - 0.0018819 * t * t + 1.0 / 545868.0 * t * t * t - 1.0 / 113065000.0 * t * t * t * t) * toRad
+        val m = cnt(357.5291092 + 35999.0502909 * t - 0.0001536 * t * t + 1.0 / 24490000.0 * t * t * t) * toRad
+        val mP = cnt(134.9633964 + 477198.8675055 * t + 0.0087414 * t * t + 1.0 / 69699.0 * t * t * t - 1.0 / 14712000.0 * t * t * t * t) * toRad
+        val i = cnt(180 - d * 180 / Math.PI - 6.289 * sin(mP) + 2.1 * sin(m) - 1.274 * sin(2 * d - mP) - 0.658 * sin(2 * d) - 0.214 * sin(2 * mP) - 0.11 * sin(d)) * toRad
 
         return (1 + cos(i)) / 2
     }
@@ -229,7 +270,7 @@ class MainActivity : AppCompatActivity() {
         val canvas = Canvas(outputBitmap)
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         val paint1 = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint1.maskFilter = BlurMaskFilter(20f, BlurMaskFilter.Blur.NORMAL)
+        paint1.maskFilter = BlurMaskFilter(1f/*20f*/, BlurMaskFilter.Blur.NORMAL)
 
         canvas.drawPath(path, paint1)
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
@@ -363,7 +404,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getDir(phase: Int, moonAge: Long, percentage: Double): Int {
+    fun getDir(phase: Int, moonAge: Double, percentage: Double): Int {
         return when (phase) {
             0 -> if (moonAge % 29.530588 in 0f..14.765294f) { 0 } else { 1 }
             1 -> 0
@@ -377,7 +418,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getPhase(context: Context, moonAge: Long): Array<Any> {
+    fun getPhase(context: Context, moonAge: Double): Array<Any> {
         return when (moonAge % 29.530588f) {
             in 0f..1f -> arrayOf(context.getString(R.string.new_moon), 0)
             in 1f..6.382647f -> arrayOf(context.getString(R.string.waxing_crescent), 1)
@@ -465,11 +506,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         runOnUiThread {
-            ytxt.text = "${editDate[0]}"
-            mtxt.text = "${editDate[1]}"
-            dtxt.text = "${editDate[2]}"
-            htxt.text = "${editDate[3]}"
-            mmtxt.text = "${editDate[4]}"
+            ytxt.text = "000${editDate[0]}".takeLast(4)
+            mtxt.text = "0${editDate[1]}".takeLast(2)
+            dtxt.text = "0${editDate[2]}".takeLast(2)
+            htxt.text = "0${editDate[3]}".takeLast(2)
+            mmtxt.text = "0${editDate[4]}".takeLast(2)
         }
         main()
     }

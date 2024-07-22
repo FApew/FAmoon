@@ -19,8 +19,4 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:typeface">monospace</item>
     </style>
-
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- No status bar color code -->
-    </style>
 </resources>
