@@ -210,7 +210,7 @@
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:layout_weight=".6"
+                                    android:layout_weight=".5"
                                     android:orientation="vertical">
 
                                     <FrameLayout
@@ -338,6 +338,7 @@
                                                 app:layout_constraintStart_toEndOf="@+id/imageView6"
                                                 app:layout_constraintTop_toTopOf="parent" />
                                         </androidx.constraintlayout.widget.ConstraintLayout>
+
                                     </LinearLayout>
 
                                 </LinearLayout>
@@ -345,8 +346,20 @@
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
-                                    android:layout_weight=".4">
+                                    android:layout_weight=".5">
 
+                                    <ImageView
+                                        android:id="@+id/line"
+                                        android:layout_width="0dp"
+                                        android:layout_height="0dp"
+                                        android:scaleType="fitCenter"
+                                        android:scaleX=".9"
+                                        android:scaleY=".9"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:srcCompat="@drawable/barra" />
                                 </androidx.constraintlayout.widget.ConstraintLayout>
                             </LinearLayout>
 
@@ -358,7 +371,115 @@
                             android:layout_height="200dp"
                             android:layout_marginHorizontal="15dp"
                             android:layout_marginBottom="50dp"
-                            android:background="@drawable/boxes">
+                            android:background="@drawable/boxes"
+                            android:padding="15dp"
+                            android:paddingTop="20dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight=".5"
+                                android:orientation="vertical">
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".25">
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <ImageView
+                                            android:id="@+id/imageView"
+                                            android:layout_width="60dp"
+                                            android:layout_height="0dp"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent"
+                                            app:srcCompat="@drawable/rise_set" />
+
+                                        <TextView
+                                            android:id="@+id/textView"
+                                            android:layout_width="0dp"
+                                            android:layout_height="0dp"
+                                            android:autoSizeTextType="uniform"
+                                            android:fontFamily="@font/sambold"
+                                            android:gravity="center_vertical"
+                                            android:paddingStart="10dp"
+                                            android:text="@string/altitude"
+                                            android:textColor="@color/cl5"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintStart_toEndOf="@+id/imageView"
+                                            app:layout_constraintTop_toTopOf="parent" />
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".7">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="horizontal"
+                                        android:paddingStart="10dp">
+
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight=".3"
+                                            android:orientation="vertical">
+
+                                            <androidx.constraintlayout.widget.ConstraintLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight=".4">
+
+                                                <TextView
+                                                    android:id="@+id/altTxt"
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="0dp"
+                                                    android:autoSizeTextType="uniform"
+                                                    android:fontFamily="@font/samsans"
+                                                    android:paddingTop="20dp"
+                                                    android:text="↑ 29.5°"
+                                                    android:textColor="@color/cl3"
+                                                    app:layout_constraintBottom_toBottomOf="parent"
+                                                    app:layout_constraintEnd_toEndOf="parent"
+                                                    app:layout_constraintStart_toStartOf="parent"
+                                                    app:layout_constraintTop_toTopOf="parent" />
+                                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                            <FrameLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight=".6">
+
+                                            </FrameLayout>
+                                        </LinearLayout>
+
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight=".7">
+
+                                            <ImageView
+                                                android:id="@+id/altImage"
+                                                android:layout_width="0dp"
+                                                android:layout_height="0dp"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                app:srcCompat="@drawable/sine" />
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                    </LinearLayout>
+                                </FrameLayout>
+                            </LinearLayout>
 
                         </FrameLayout>
 
@@ -368,8 +489,115 @@
                             android:layout_height="200dp"
                             android:layout_marginHorizontal="15dp"
                             android:layout_marginBottom="50dp"
-                            android:background="@drawable/boxes">
+                            android:background="@drawable/boxes"
+                            android:padding="15dp"
+                            android:paddingTop="20dp">
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight=".5"
+                                android:orientation="vertical">
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".25">
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <ImageView
+                                            android:id="@+id/imageView7"
+                                            android:layout_width="60dp"
+                                            android:layout_height="0dp"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent"
+                                            app:srcCompat="@drawable/azimuth" />
+
+                                        <TextView
+                                            android:id="@+id/textView1"
+                                            android:layout_width="0dp"
+                                            android:layout_height="0dp"
+                                            android:autoSizeTextType="uniform"
+                                            android:fontFamily="@font/sambold"
+                                            android:gravity="center_vertical"
+                                            android:paddingStart="10dp"
+                                            android:text="@string/azimuth"
+                                            android:textColor="@color/cl5"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintStart_toEndOf="@+id/imageView7"
+                                            app:layout_constraintTop_toTopOf="parent" />
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+                                </FrameLayout>
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight=".7">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="horizontal"
+                                        android:paddingStart="10dp">
+
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight=".4"
+                                            android:orientation="vertical">
+
+                                            <androidx.constraintlayout.widget.ConstraintLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight=".4">
+
+                                                <TextView
+                                                    android:id="@+id/aziTxt"
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="0dp"
+                                                    android:autoSizeTextType="uniform"
+                                                    android:fontFamily="@font/samsans"
+                                                    android:paddingTop="20dp"
+                                                    android:text="46.71° NE"
+                                                    android:textColor="@color/cl3"
+                                                    app:layout_constraintBottom_toBottomOf="parent"
+                                                    app:layout_constraintEnd_toEndOf="parent"
+                                                    app:layout_constraintStart_toStartOf="parent"
+                                                    app:layout_constraintTop_toTopOf="parent" />
+                                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                            <FrameLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight=".6">
+
+                                            </FrameLayout>
+                                        </LinearLayout>
+
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight=".6">
+
+                                            <ImageView
+                                                android:id="@+id/aziImage"
+                                                android:layout_width="0dp"
+                                                android:layout_height="0dp"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintTop_toTopOf="parent"
+                                                app:srcCompat="@drawable/app_widget_background" />
+                                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                    </LinearLayout>
+                                </FrameLayout>
+                            </LinearLayout>
                         </FrameLayout>
 
                         <FrameLayout

@@ -5,6 +5,7 @@
     <string name="phase">Fase</string>
     <string name="age">Età</string>
     <string name="outOf">su</string>
+    <string name="altitude">Altitudine</string>
     <string name="new_moon">Luna nuova</string>
     <string name="waxing_crescent">Luna Crescente</string>
     <string name="first_quarter">Primo Quarto</string>

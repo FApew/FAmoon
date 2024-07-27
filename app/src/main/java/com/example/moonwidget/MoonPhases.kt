@@ -19,7 +19,6 @@ import android.text.style.TextAppearanceSpan
 import android.widget.RemoteViews
 import androidx.preference.PreferenceManager
 import androidx.core.content.res.ResourcesCompat
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import java.util.Date
@@ -49,7 +48,10 @@ private fun clock(context: Context, appWidgetManager: AppWidgetManager, appWidge
 
 internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
     val views = RemoteViews(context.packageName, R.layout.moon_phases)
-    val moonAge = ChronoUnit.DAYS.between(LocalDate.of(2000, 1, 6), LocalDate.now()).toDouble()
+    var moonAge = (ChronoUnit.MINUTES.between(LocalDateTime.of(2024, 8, 4, 13, 13, 0), LocalDateTime.now()).toDouble()/(60*24))%29.530588
+    if (moonAge < 0) {
+        moonAge += 29.530588
+    }
     val percentage = MainActivity().getFraction(MainActivity().jDate(Date().time.toDouble())) * 100
     val phase = MainActivity().getPhase(context, moonAge)
     val dir = MainActivity().getDir(phase[1] as Int, moonAge, percentage)
@@ -57,9 +59,9 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     val latitude = sharedPreferences.getFloat("latitude", 0.0f)
     val longitude = sharedPreferences.getFloat("longitude", 0.0f)
     val date = LocalDateTime.now()
-    val sunPosition = MainActivity().calculateSunPosition(LocalDateTime.now(), latitude.toDouble(), longitude.toDouble())
-    val moonPosition = MainActivity().calculateMoonPosition(date, latitude.toDouble(), longitude.toDouble())
-    val clipMoon = MainActivity().clipMoon(context, R.drawable.newm, (percentage*100).roundToInt().toFloat()/100, dir, MainActivity().getAngle(moonPosition.first, moonPosition.second, sunPosition.first, sunPosition.second).toFloat() - 90)
+    val sunPosition = MainActivity().calcSunPos(LocalDateTime.now(), latitude.toDouble(), longitude.toDouble())
+    val moonPosition = MainActivity().calcMoonPos(date, latitude.toDouble(), longitude.toDouble())
+    val clipMoon = MainActivity().clipMoon(context, R.drawable.newm, (percentage*100).roundToInt().toFloat()/100, dir, MainActivity().getAngle(moonPosition.first, moonPosition.second, sunPosition.first, sunPosition.second).toFloat() - 90, true)
     val moonIcon = MainActivity().overlapBitmapsAndRotate(BitmapFactory.decodeResource(context.resources, R.drawable.full), clipMoon)
     views.setTextViewText(R.id.illPerc, getFont(context, R.font.sambold,"${percentage.roundToInt()}%", R.style.illPerc))
     views.setTextViewText(R.id.phaseText, getFont(context, R.font.samsans, phase[0].toString(), R.style.phaseText))
