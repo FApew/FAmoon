@@ -37,12 +37,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="9"
+            android:animateLayoutChanges="true"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="7">
+                android:layout_weight=".7">
 
                 <ScrollView
                     android:id="@+id/scroll"
@@ -430,7 +431,7 @@
                                         <LinearLayout
                                             android:layout_width="wrap_content"
                                             android:layout_height="match_parent"
-                                            android:layout_weight=".3"
+                                            android:layout_weight=".25"
                                             android:orientation="vertical">
 
                                             <androidx.constraintlayout.widget.ConstraintLayout
@@ -464,7 +465,7 @@
                                         <androidx.constraintlayout.widget.ConstraintLayout
                                             android:layout_width="wrap_content"
                                             android:layout_height="match_parent"
-                                            android:layout_weight=".7">
+                                            android:layout_weight=".75">
 
                                             <ImageView
                                                 android:id="@+id/altImage"
@@ -474,7 +475,7 @@
                                                 app:layout_constraintEnd_toEndOf="parent"
                                                 app:layout_constraintStart_toStartOf="parent"
                                                 app:layout_constraintTop_toTopOf="parent"
-                                                app:srcCompat="@drawable/sine" />
+                                                app:srcCompat="@drawable/app_widget_background" />
                                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                                     </LinearLayout>
@@ -624,437 +625,492 @@
                 </ScrollView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <FrameLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="25dp">
+
+                <ImageButton
+                    android:id="@+id/optBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#0000"
+                    android:paddingVertical="3dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/slider" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:animateLayoutChanges="true">
+                android:layout_weight=".3"
+                android:background="@drawable/opt_shape"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                tools:visibility="visible">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5">
+
+                    <ImageButton
+                        android:id="@+id/resetClock"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:adjustViewBounds="true"
+                        android:background="#0000"
+                        android:scaleType="fitCenter"
+                        android:scaleX="1.5"
+                        android:scaleY="1.5"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/clock" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    tools:ignore="UselessParent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/imageView8"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_marginStart="180dp"
-                            android:layout_marginEnd="180dp"
-                            android:scaleType="fitCenter"
-                            android:scaleX="5"
-                            android:scaleY="5"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/slider" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_weight="8.5"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="9"
-                        android:background="@drawable/opt_shape"
-                        android:orientation="horizontal">
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1.5">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
                             <ImageButton
-                                android:id="@+id/resetClock"
+                                android:id="@+id/hU"
                                 android:layout_width="0dp"
                                 android:layout_height="0dp"
-                                android:adjustViewBounds="true"
                                 android:background="#0000"
-                                android:scaleType="fitCenter"
-                                android:scaleX="1.5"
-                                android:scaleY="1.5"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="7dp"
+                                android:rotationX="180"
+                                android:scaleType="fitStart"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/clock" />
-
+                                app:srcCompat="@drawable/arrow" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="8.5"
-                            android:baselineAligned="false"
-                            android:orientation="horizontal">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5">
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="2"
-                                android:orientation="vertical"
-                                tools:ignore="NestedWeights">
+                            <TextView
+                                android:id="@+id/hTxt"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:autoSizeTextType="uniform"
+                                android:fontFamily="@font/samsans"
+                                android:gravity="center"
+                                android:text="14"
+                                android:textAlignment="gravity"
+                                android:textColor="@color/cl5"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    tools:ignore="NestedWeights">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                                    <ImageButton
-                                        android:id="@+id/yU"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:background="#00FFFFFF"
-                                        android:contentDescription="arrow"
-                                        android:rotationX="180"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            <ImageButton
+                                android:id="@+id/hD"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:background="#0000"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="7dp"
+                                android:scaleType="fitStart"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/arrow" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1.5">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4">
 
-                                    <TextView
-                                        android:id="@+id/yTxt"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:autoSizeTextType="uniform"
-                                        android:fontFamily="@font/samsans"
-                                        android:gravity="center"
-                                        android:text="2024"
-                                        android:textAlignment="gravity"
-                                        android:textColor="@color/cl5"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:autoSizeMaxTextSize="50sp"
+                            android:autoSizeTextType="uniform"
+                            android:fontFamily="@font/samsans"
+                            android:gravity="center"
+                            android:padding="2dp"
+                            android:text=":"
+                            android:textColor="@color/cl4"
+                            android:translationY="-5dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                                    <ImageButton
-                                        android:id="@+id/yD"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:adjustViewBounds="true"
-                                        android:background="#0000"
-                                        android:contentDescription="arrow"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="-10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-                            </LinearLayout>
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                            <ImageButton
+                                android:id="@+id/mmU"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:background="#0000"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="7dp"
+                                android:rotationX="180"
+                                android:scaleType="fitStart"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/arrow" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5">
 
-                                    <ImageButton
-                                        android:id="@+id/mU"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:adjustViewBounds="true"
-                                        android:background="#0000"
-                                        android:contentDescription="arrow"
-                                        android:rotationX="180"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            <TextView
+                                android:id="@+id/mmTxt"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:autoSizeTextType="uniform"
+                                android:fontFamily="@font/samsans"
+                                android:gravity="center"
+                                android:text="41"
+                                android:textAlignment="gravity"
+                                android:textColor="@color/cl5"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1.5">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                                    <TextView
-                                        android:id="@+id/mTxt"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:autoSizeTextType="uniform"
-                                        android:fontFamily="@font/samsans"
-                                        android:gravity="center"
-                                        android:text="07"
-                                        android:textAlignment="gravity"
-                                        android:textColor="@color/cl5"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            <ImageButton
+                                android:id="@+id/mmD"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:background="#0000"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="7dp"
+                                android:scaleType="fitStart"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/arrow" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".3">
 
-                                    <ImageButton
-                                        android:id="@+id/mD"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:adjustViewBounds="true"
-                                        android:background="#0000"
-                                        android:contentDescription="arrow"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="-10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-                            </LinearLayout>
+                    </FrameLayout>
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                                    <ImageButton
-                                        android:id="@+id/dU"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:adjustViewBounds="true"
-                                        android:background="#0000"
-                                        android:contentDescription="arrow"
-                                        android:rotationX="180"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            <ImageButton
+                                android:id="@+id/dU"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                android:background="#0000"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="7dp"
+                                android:rotationX="180"
+                                android:scaleType="fitStart"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/arrow" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1.5">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5">
 
-                                    <TextView
-                                        android:id="@+id/dTxt"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:autoSizeTextType="uniform"
-                                        android:fontFamily="@font/samsans"
-                                        android:gravity="center"
-                                        android:text="20"
-                                        android:textAlignment="gravity"
-                                        android:textColor="@color/cl5"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            <TextView
+                                android:id="@+id/dTxt"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:autoSizeTextType="uniform"
+                                android:fontFamily="@font/samsans"
+                                android:gravity="center"
+                                android:text="20"
+                                android:textAlignment="gravity"
+                                android:textColor="@color/cl5"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                                    <ImageButton
-                                        android:id="@+id/dD"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:adjustViewBounds="true"
-                                        android:background="#0000"
-                                        android:contentDescription="arrow"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="-10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-                            </LinearLayout>
+                            <ImageButton
+                                android:id="@+id/dD"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                android:background="#0000"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="7dp"
+                                android:scaleType="fitStart"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/arrow" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4">
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:autoSizeMaxTextSize="30sp"
+                            android:autoSizeTextType="uniform"
+                            android:fontFamily="@font/samsans"
+                            android:gravity="center"
+                            android:padding="2dp"
+                            android:text="/"
+                            android:textColor="@color/cl4"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                    <ImageButton
-                                        android:id="@+id/hU"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:background="#0000"
-                                        android:contentDescription="arrow"
-                                        android:rotationX="180"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1.5">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                                    <TextView
-                                        android:id="@+id/hTxt"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:autoSizeTextType="uniform"
-                                        android:fontFamily="@font/samsans"
-                                        android:gravity="center"
-                                        android:text="14"
-                                        android:textAlignment="gravity"
-                                        android:textColor="@color/cl5"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            <ImageButton
+                                android:id="@+id/mU"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                android:background="#0000"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="7dp"
+                                android:rotationX="180"
+                                android:scaleType="fitStart"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/arrow" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5">
 
-                                    <ImageButton
-                                        android:id="@+id/hD"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:background="#0000"
-                                        android:contentDescription="arrow"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="-10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/mTxt"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:autoSizeTextType="uniform"
+                                android:fontFamily="@font/samsans"
+                                android:gravity="center"
+                                android:text="07"
+                                android:textAlignment="gravity"
+                                android:textColor="@color/cl5"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                            <ImageButton
+                                android:id="@+id/mD"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                android:background="#0000"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="7dp"
+                                android:scaleType="fitStart"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/arrow" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
 
-                                    <ImageButton
-                                        android:id="@+id/mmU"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:background="#0000"
-                                        android:contentDescription="arrow"
-                                        android:rotationX="180"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4">
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1.5">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:autoSizeMaxTextSize="30sp"
+                            android:autoSizeTextType="uniform"
+                            android:fontFamily="@font/samsans"
+                            android:gravity="center"
+                            android:padding="2dp"
+                            android:text="/"
+                            android:textColor="@color/cl4"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                                    <TextView
-                                        android:id="@+id/mmTxt"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:autoSizeTextType="uniform"
-                                        android:fontFamily="@font/samsans"
-                                        android:gravity="center"
-                                        android:text="41"
-                                        android:textAlignment="gravity"
-                                        android:textColor="@color/cl5"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="2"
+                        android:orientation="vertical"
+                        tools:ignore="NestedWeights">
 
-                                <androidx.constraintlayout.widget.ConstraintLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            tools:ignore="NestedWeights">
 
-                                    <ImageButton
-                                        android:id="@+id/mmD"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:background="#0000"
-                                        android:contentDescription="arrow"
-                                        android:scaleType="fitCenter"
-                                        android:translationY="-10dp"
-                                        app:layout_constraintBottom_toBottomOf="parent"
-                                        app:layout_constraintEnd_toEndOf="parent"
-                                        app:layout_constraintStart_toStartOf="parent"
-                                        app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/arrow" />
-                                </androidx.constraintlayout.widget.ConstraintLayout>
-                            </LinearLayout>
+                            <ImageButton
+                                android:id="@+id/yU"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:background="#00FFFFFF"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="29dp"
+                                android:rotationX="180"
+                                android:scaleType="fitStart"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/arrow" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        </LinearLayout>
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5">
+
+                            <TextView
+                                android:id="@+id/yTxt"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:autoSizeTextType="uniform"
+                                android:fontFamily="@font/samsans"
+                                android:gravity="center"
+                                android:text="2024"
+                                android:textAlignment="gravity"
+                                android:textColor="@color/cl5"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <ImageButton
+                                android:id="@+id/yD"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:adjustViewBounds="true"
+                                android:background="#0000"
+                                android:contentDescription="arrow"
+                                android:paddingHorizontal="29dp"
+                                android:scaleType="fitStart"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/arrow" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </LinearLayout>
 
                 </LinearLayout>
-            </FrameLayout>
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
