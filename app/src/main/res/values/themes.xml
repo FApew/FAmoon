@@ -2,6 +2,7 @@
     <style name="Theme.MoonWidget" parent="Base.Theme.MoonWidget">
         <item name="android:statusBarColor">@color/cl1</item>
         <item name="android:navigationBarColor">@color/cl2</item>
+        <item name="android:windowBackground">@color/cl1</item>
     </style>
 
     <style name="Theme.MoonWidget.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">

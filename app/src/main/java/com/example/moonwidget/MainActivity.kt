@@ -1,7 +1,5 @@
 package com.example.moonwidget
 
-import android.animation.LayoutTransition
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -17,12 +15,7 @@ import android.graphics.Path
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.RectF
-import android.graphics.Typeface
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Im
-import android.text.TextPaint
-import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -40,6 +33,7 @@ import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.acos
 import kotlin.math.asin
 import kotlin.math.atan2
@@ -149,7 +143,7 @@ class MainActivity : AppCompatActivity() {
     private val timer = Timer()
     private var day = LocalDateTime.now().withHour(0).withMinute(0)
     private var altArr = mutableListOf<Double>()
-    private var altDates = Pair(LocalDateTime.now(), LocalDateTime.now())
+    private var altDates = mutableListOf(LocalDateTime.now())
     private var optBool = false
 
     override fun onDestroy() {
@@ -167,7 +161,6 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     fun main() {
-        println("clock")
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = sharedPreferences.edit()
         var date = LocalDateTime.now()
@@ -326,36 +319,75 @@ class MainActivity : AppCompatActivity() {
         return arr
     }
 
-    private fun getAltDates(date: LocalDateTime, altArr: MutableList<Double>, lat: Double, long: Double): Pair<LocalDateTime, LocalDateTime> {
-        val maxMm = (altArr.indexOf(altArr.maxOrNull()).toFloat()/altArr.size.toFloat())*1440f
-        val minMm = (altArr.indexOf(altArr.minOrNull()).toFloat()/altArr.size.toFloat())*1440f
-        var minTempDate = date.withHour(0).withMinute(0).plusMinutes(minMm.toLong())
-        var maxTempDate = date.withHour(0).withMinute(0).plusMinutes(maxMm.toLong())
+    private fun getAltDates(date: LocalDateTime, altArr: MutableList<Double>, lat: Double, long: Double): MutableList<LocalDateTime> {
+        var temp = altArr[0] < 0
+        var idx1 = -1
+        var idx2 = -1
+        for (i in altArr.indices) {
+            if (temp == altArr[i] > 0) {
+                if (idx1 < 0) {
+                    idx1 = i
+                } else {
+                    idx2 = i
+                }
+            }
+            temp = altArr[i] < 0
+        }
+        val Mm1 = (idx1/altArr.size.toFloat())*1440f
+        val Mm2 = (idx2/altArr.size.toFloat())*1440f
+        val Mm3 = (altArr.indexOf(altArr.minOrNull())/altArr.size.toFloat())*1440f
+        val Mm4 = (altArr.indexOf(altArr.maxOrNull())/altArr.size.toFloat())*1440f
+        var tempDate1 = date.withHour(0).withMinute(0).plusMinutes(Mm1.toLong())
+        var tempDate2 = date.withHour(0).withMinute(0).plusMinutes(Mm2.toLong())
+        var tempDate3 = date.withHour(0).withMinute(0).plusMinutes(Mm3.toLong())
+        var tempDate4 = date.withHour(0).withMinute(0).plusMinutes(Mm4.toLong())
 
-        var min = 128f
-        var max = -128f
-        var minDate = date
-        var maxDate = date
+        var min1 = 128f
+        var min2 = 128f
+        var min3 = 128f
+        var max4 = -128f
+        var date1 = date
+        var date2 = date
+        var date3 = date
+        var date4 = date
 
         for (i in -30 .. 30) {
-            val tempDate = minTempDate.plusMinutes(i.toLong())
-            val alt = calcMoonPos(tempDate, lat, long).first
-            if (alt < min) {
-                min = alt.toFloat()
-                minDate = tempDate
+            val tempDate = tempDate1.plusMinutes(i.toLong())
+            val alt = abs(calcMoonPos(tempDate, lat, long).first)
+            if (alt < min1) {
+                min1 = alt.toFloat()
+                date1 = tempDate
             }
         }
 
         for (i in -30 .. 30) {
-            val tempDate = maxTempDate.plusMinutes(i.toLong())
-            val alt = calcMoonPos(tempDate, lat, long).first
-            if (alt > max) {
-                max = alt.toFloat()
-                maxDate = tempDate
+            val tempDate = tempDate2.plusMinutes(i.toLong())
+            val alt = abs(calcMoonPos(tempDate, lat, long).first)
+            if (alt < min2) {
+                min2 = alt.toFloat()
+                date2 = tempDate
             }
         }
 
-        return Pair(minDate, maxDate)
+        for (i in -30 .. 30) {
+            val tempDate = tempDate3.plusMinutes(i.toLong())
+            val alt = calcMoonPos(tempDate, lat, long).first
+            if (alt < min3) {
+                min3 = alt.toFloat()
+                date3 = tempDate
+            }
+        }
+
+        for (i in -30 .. 30) {
+            val tempDate = tempDate4.plusMinutes(i.toLong())
+            val alt = calcMoonPos(tempDate, lat, long).first
+            if (alt > max4) {
+                max4 = alt.toFloat()
+                date4 = tempDate
+            }
+        }
+
+        return mutableListOf(date1, date2, date3, date4)
     }
 
     private fun drawDaysLine(p: Double, icon: Bitmap): Bitmap {
@@ -379,13 +411,14 @@ class MainActivity : AppCompatActivity() {
         return bitmap
     }
 
-    private fun drawAltGraph(ctx: Context, date: LocalDateTime, alt: Double, altArr: MutableList<Double>, altDates: Pair<LocalDateTime, LocalDateTime>, icon: Bitmap): Bitmap {
+    private fun drawAltGraph(ctx: Context, date: LocalDateTime, alt: Double, altArr: MutableList<Double>, altDates: MutableList<LocalDateTime>, icon: Bitmap): Bitmap {
         val width = 1920
         val height = 1080
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
         val off = 128f
+        val txtOff = 64f
         val offY = height/2f
 
         var paint = Paint().apply {
@@ -395,7 +428,7 @@ class MainActivity : AppCompatActivity() {
             isAntiAlias = true
         }
 
-        canvas.drawLine(off, offY+off, width-off, offY+off, paint)
+        canvas.drawLine(off, offY, width-off, offY, paint)
 
         paint = Paint().apply {
             color = ContextCompat.getColor(ctx, R.color.cl3)
@@ -403,7 +436,7 @@ class MainActivity : AppCompatActivity() {
             strokeWidth = 16f
             isAntiAlias = true
         }
-        val dashPath = DashPathEffect(floatArrayOf(60f, 30f), 0f)
+        val dashPath = DashPathEffect(floatArrayOf(60f, 30f), 30f)
         paint.pathEffect = dashPath
 
         val font = ResourcesCompat.getFont(ctx, R.font.samsans)
@@ -437,21 +470,29 @@ class MainActivity : AppCompatActivity() {
             canvas.drawText(parts[1], startX + h + sep, y, textPaint)
         }
 
-        var lineX = (width - 2 * off) * (ChronoUnit.MINUTES.between(date.withHour(0).withMinute(0), altDates.first).toFloat() / 1440f)
-        canvas.drawLine(off + lineX, 2*off, off + lineX, height - off, paint)
-        drawTxt(altDates.first, off + lineX, off + textPaint.textSize/2)
+        var lineX = (width - 2 * off) * (ChronoUnit.MINUTES.between(date.withHour(0).withMinute(0), altDates[0]).toFloat() / 1440f)
+        canvas.drawLine(off + lineX, 3*txtOff, off + lineX, height - txtOff, paint)
+        drawTxt(altDates[0], off + lineX, txtOff + textPaint.textSize/2)
 
-        lineX = (width - 2 * off) * (ChronoUnit.MINUTES.between(date.withHour(0).withMinute(0), altDates.second).toFloat() / 1440f)
-        canvas.drawLine(off + lineX, off, off + lineX, height - 2*off, paint)
-        drawTxt(altDates.second, off + lineX, height - off)
+        lineX = (width - 2 * off) * (ChronoUnit.MINUTES.between(date.withHour(0).withMinute(0), altDates[1]).toFloat() / 1440f)
+        canvas.drawLine(off + lineX, 3*txtOff, off + lineX, height - txtOff, paint)
+        drawTxt(altDates[1], off + lineX, txtOff + textPaint.textSize/2)
+
+        lineX = (width - 2 * off) * (ChronoUnit.MINUTES.between(date.withHour(0).withMinute(0), altDates[2]).toFloat() / 1440f)
+        canvas.drawLine(off + lineX, txtOff, off + lineX, height - 3*txtOff, paint)
+        drawTxt(altDates[2], off + lineX, height - txtOff)
+
+        lineX = (width - 2 * off) * (ChronoUnit.MINUTES.between(date.withHour(0).withMinute(0), altDates[3]).toFloat() / 1440f)
+        canvas.drawLine(off + lineX, txtOff, off + lineX, height - 3*txtOff, paint)
+        drawTxt(altDates[3], off + lineX, height - txtOff)
 
         val path = Path()
         val scX = (width - 2*off)/(altArr.size-1)
         val scY = (height - 2*off)/200f
-        path.moveTo(off, (-altArr[0] * scY + offY + off).toFloat())
+        path.moveTo(off, (-altArr[0] * scY + offY).toFloat())
         for (i in altArr.indices) {
             val x = i * scX + off
-            val y = -altArr[i] * scY + offY + off
+            val y = -altArr[i] * scY + offY
             path.lineTo(x, y.toFloat())
         }
 
@@ -470,8 +511,8 @@ class MainActivity : AppCompatActivity() {
         val x = (width - 2*off)*(ChronoUnit.MINUTES.between(date.withHour(0).withMinute(0), date).toFloat()/1440f)
         val y = -alt * scY + offY
         val size = 30f
-        canvas.drawOval(RectF(x-size, (y-size).toFloat(), x+2*off+size, (y+2*off+size).toFloat()), paint)
-        canvas.drawBitmap(Bitmap.createScaledBitmap(icon, (off*2).toInt(), (off*2).toInt(), false), x, y.toFloat(), null)
+        canvas.drawOval(RectF(x-size, (y-off-size).toFloat(), x+2*off+size, (y-off+2*off+size).toFloat()), paint)
+        canvas.drawBitmap(Bitmap.createScaledBitmap(icon, (off*2).toInt(), (off*2).toInt(), false), x, (y-off).toFloat(), null)
 
         return bitmap
     }
@@ -754,14 +795,11 @@ class MainActivity : AppCompatActivity() {
             editDate[1] -= 1
         } else if (editDate[2] > length) {
             editDate[2] = 1
-            println("test1")
-            println(length)
             editDate[1] += 1
         }
         if (editDate[1] < 1) {
             editDate[1] = 12
             editDate[0] -= 1
-            println("test")
             if (editDate[2] > length) {
                 editDate[2] = length-1
             }
@@ -801,8 +839,6 @@ class MainActivity : AppCompatActivity() {
     private fun toggleOpt() {
         optBool = !optBool
         val params = options.layoutParams as LinearLayout.LayoutParams
-        /*val parent = options.parent as ViewGroup
-        parent.layoutTransition = LayoutTransition()*/
 
         if (optBool) {
             params.weight = .3f

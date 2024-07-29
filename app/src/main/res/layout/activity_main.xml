@@ -648,7 +648,7 @@
                 android:id="@+id/options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight=".3"
+                android:layout_weight="0"
                 android:background="@drawable/opt_shape"
                 android:orientation="horizontal"
                 android:paddingTop="10dp"
