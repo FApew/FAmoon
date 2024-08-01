@@ -61,7 +61,7 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
     val date = LocalDateTime.now()
     val sunPosition = MainActivity().calcSunPos(LocalDateTime.now(), latitude.toDouble(), longitude.toDouble())
     val moonPosition = MainActivity().calcMoonPos(date, latitude.toDouble(), longitude.toDouble())
-    val clipMoon = MainActivity().clipMoon(context, R.drawable.newm, (percentage*100).roundToInt().toFloat()/100, dir, MainActivity().getAngle(moonPosition.first, moonPosition.second, sunPosition.first, sunPosition.second).toFloat() - 90, true)
+    val clipMoon = MainActivity().clipMoon(context, R.drawable.newm, (percentage*100).roundToInt().toFloat()/100, dir, MainActivity().getAngle(moonPosition[0], moonPosition[1], sunPosition[0], sunPosition[1]).toFloat() - 90, true)
     val moonIcon = MainActivity().overlapBitmapsAndRotate(BitmapFactory.decodeResource(context.resources, R.drawable.full), clipMoon)
     views.setTextViewText(R.id.illPerc, getFont(context, R.font.sambold,"${percentage.roundToInt()}%", R.style.illPerc))
     views.setTextViewText(R.id.phaseText, getFont(context, R.font.samsans, phase[0].toString(), R.style.phaseText))

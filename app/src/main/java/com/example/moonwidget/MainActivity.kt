@@ -38,8 +38,10 @@ import kotlin.math.acos
 import kotlin.math.asin
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import kotlin.math.sqrt
 import kotlin.math.tan
 
 class MainActivity : AppCompatActivity() {
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var line: ImageView
     private lateinit var altImg: ImageView
     private lateinit var aziImg: ImageView
+    private lateinit var distImg: ImageView
     private lateinit var phaseText: TextView
     private lateinit var illPerc: TextView
     private lateinit var ageTxt: TextView
@@ -54,6 +57,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var newTtxt: TextView
     private lateinit var altTxt: TextView
     private lateinit var aziTxt: TextView
+    private lateinit var riseAziTxt: TextView
+    private lateinit var setAziTxt: TextView
+    private lateinit var distTxt: TextView
+    private lateinit var perTxt: TextView
+    private lateinit var apoTxt: TextView
+    private lateinit var obsDistTxt: TextView
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var clock: ImageButton
     private lateinit var yup: ImageButton
@@ -75,6 +84,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var newBit: Bitmap
     private lateinit var fullBit: Bitmap
     private lateinit var barBit: Bitmap
+    private lateinit var aziBit: Bitmap
+    private lateinit var distBit: Bitmap
     private lateinit var options: LinearLayout
 
     @SuppressLint("MissingInflatedId")
@@ -86,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         line = findViewById(R.id.line)
         altImg = findViewById(R.id.altImage)
         aziImg = findViewById(R.id.aziImage)
+        distImg = findViewById(R.id.distImage)
         phaseText = findViewById(R.id.phaseText)
         illPerc = findViewById(R.id.illPerc)
         ageTxt = findViewById(R.id.ageTxt)
@@ -93,6 +105,12 @@ class MainActivity : AppCompatActivity() {
         newTtxt = findViewById(R.id.newTtxt)
         altTxt = findViewById(R.id.altTxt)
         aziTxt = findViewById(R.id.aziTxt)
+        riseAziTxt = findViewById(R.id.riseAziTxt)
+        setAziTxt = findViewById(R.id.setAziTxt)
+        distTxt = findViewById(R.id.distTxt)
+        perTxt = findViewById(R.id.perTxt)
+        apoTxt = findViewById(R.id.apoTxt)
+        obsDistTxt = findViewById(R.id.obsDistTxt)
         clock = findViewById(R.id.resetClock)
         yup = findViewById(R.id.yU)
         mup = findViewById(R.id.mU)
@@ -130,6 +148,8 @@ class MainActivity : AppCompatActivity() {
         newBit = BitmapFactory.decodeResource(resources, R.drawable.dark)
         fullBit = BitmapFactory.decodeResource(resources, R.drawable.light)
         barBit = BitmapFactory.decodeResource(resources, R.drawable.barra)
+        aziBit = BitmapFactory.decodeResource(resources, R.drawable.compass)
+        distBit = BitmapFactory.decodeResource(resources, R.drawable.distbar)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         clock()
@@ -175,7 +195,7 @@ class MainActivity : AppCompatActivity() {
                 mmtxt.text = "0${editDate[4]}".takeLast(2)
             }
         } else {
-            date = LocalDateTime.of(editDate[0], editDate[1], editDate[2], editDate[3], editDate[4], 0)
+            date = LocalDateTime.of(editDate[0], editDate[1], editDate[2], editDate[3], editDate[4], 0, 0)
         }
 
         getLocation(this, fusedLocationProviderClient) { latitude, longitude ->
@@ -198,57 +218,81 @@ class MainActivity : AppCompatActivity() {
             val dir = getDir(phase[1] as Int, moonAge, percentage)
             val sunPosition = calcSunPos(date, lat, long)
             val moonPosition = calcMoonPos(date, lat, long)
-            val clipMoon = clipMoon(this, newMoon, (percentage*100).roundToInt().toFloat()/100, dir, getAngle(moonPosition.first, moonPosition.second, sunPosition.first, sunPosition.second).toFloat() - 90, false)
+            val clipMoon = clipMoon(this, newMoon, round2(percentage).toFloat(), dir, getAngle(moonPosition[0], moonPosition[1], sunPosition[0], sunPosition[1]).toFloat() - 90, false)
             val moonIcon = overlapBitmapsAndRotate(fullBit, clipMoon)
             val dates = getMoons(date, long)
+            val distDates = getDistDates(date, lat, long)
             val lineMap = drawDaysLine((moonAge) / 29.530588, moonIcon)
+            val distMap = drawDistLine(moonPosition[2], distDates, lat, long, moonIcon)
             if (LocalDateTime.now().withHour(0).withMinute(0) != day) {
                 altArr = getAltArr(date, lat, long)
                 altDates = getAltDates(date, altArr, lat, long)
                 day = LocalDateTime.now().withHour(0).withMinute(0)
             }
-            val altSine = drawAltGraph(this, date, moonPosition.first, altArr, altDates, moonIcon)
+            val altSine = drawAltGraph(this, date, moonPosition[0], altArr, altDates, moonIcon)
+            val aziCompass = drawAziGraph(moonPosition[1], moonIcon)
 
             try {
                 //Update Phase
                 imageMoon.setImageBitmap(moonIcon)
                 phaseText.text = phase[0] as CharSequence
-                if (percentage.roundToInt().toDouble() != ((percentage*100).roundToInt().toDouble()/100)) {
-                    illPerc.text = "${((percentage*100).roundToInt().toDouble()/100)}%"
+                if (percentage.roundToInt().toDouble() != round2(percentage)) {
+                    illPerc.text = "${round2(percentage)}%"
                 } else {
                     illPerc.text = "${percentage.roundToInt()}%"
                 }
 
                 //Update Age
-                ageTxt.text = "${((moonAge)*100).roundToInt().toDouble()/100}d ${this.getString(R.string.outOf)} 29.53"
+                ageTxt.text = "${round2(moonAge)}d ${this.getString(R.string.outOf)} 29.53"
                 newTtxt.text = "0${dates.first.dayOfMonth}".takeLast(2) + "/" + "0${dates.first.monthValue}".takeLast(2) + " - ${"0${dates.first.hour}".takeLast(2)}:${"0${dates.first.minute}".takeLast(2)}"
                 fullTtxt.text = "0${dates.second.dayOfMonth}".takeLast(2) + "/" + "0${dates.second.monthValue}".takeLast(2) +  " - ${"0${dates.second.hour}".takeLast(2)}:${"0${dates.second.minute}".takeLast(2)}"
                 line.setImageBitmap(lineMap)
 
                 //Update Altitude
-                var alt = (moonPosition.first*100).roundToInt().toDouble()/100
+                var alt = round2(moonPosition[0])
                 if (alt > 0) {
                     altTxt.text = "↑ ${alt}°"
+                } else if (alt == 0.0) {
+                    altTxt.text = "= ${alt}°"
                 } else {
                     altTxt.text = "↓ ${-alt}°"
                 }
                 altImg.setImageBitmap(altSine)
 
                 //Update azimuth
-                var azi = (moonPosition.second*100).roundToInt().toDouble()/100
-                when (azi) {
-                    in 0f .. 22.5f -> aziTxt.text = "${azi}° N"
-                    in 22.6f .. 67.5f -> aziTxt.text = "${azi}° NE"
-                    in 67.6f .. 112.5f -> aziTxt.text = "${azi}° E"
-                    in 112.6f .. 157.5f -> aziTxt.text = "${azi}° SE"
-                    in 157.6f .. 202.5f -> aziTxt.text = "${azi}° S"
-                    in 202.6f .. 247.5f -> aziTxt.text = "${azi}° SW"
-                    in 247.6f .. 292.5f -> aziTxt.text = "${azi}° W"
-                    in 292.6f .. 337.5f -> aziTxt.text = "${azi}° NW"
-                    in 337.6f .. 360f -> aziTxt.text = "${azi}° N"
-                }
+                aziTxt.text = getAziTxt(round2(moonPosition[1]))
+                riseAziTxt.text = getAziTxt(round2(calcMoonPos(altDates[0], lat, long)[1]))
+                setAziTxt.text = getAziTxt(round2(calcMoonPos(altDates[1], lat, long)[1]))
+                aziImg.setImageBitmap(aziCompass)
+
+                //Update dist
+                distTxt.text = "${round2(moonPosition[2])}km"
+                perTxt.text = "0${distDates.first.dayOfMonth}".takeLast(2) + "/" + "0${distDates.first.monthValue}".takeLast(2) + " - ${"0${distDates.first.hour}".takeLast(2)}:${"0${distDates.first.minute}".takeLast(2)}"
+                apoTxt.text = "0${distDates.second.dayOfMonth}".takeLast(2) + "/" + "0${distDates.second.monthValue}".takeLast(2) +  " - ${"0${distDates.second.hour}".takeLast(2)}:${"0${distDates.second.minute}".takeLast(2)}"
+                obsDistTxt.text = "${calcDistance(moonPosition[2], moonPosition[0], moonPosition[1], lat, long).roundToInt()}km"
+                distImg.setImageBitmap(distMap)
             } catch (_: Exception) {}
         }
+    }
+
+    private fun round2(n:Double):Double {
+        return (n*100).roundToInt().toDouble()/100
+    }
+
+    private fun getAziTxt(azi: Double): String {
+        var string = ""
+        when (azi) {
+            in 0f .. 22.5f ->  string = "${azi}° N"
+            in 22.6f .. 67.5f -> string = "${azi}° NE"
+            in 67.6f .. 112.5f -> string = "${azi}° E"
+            in 112.6f .. 157.5f -> string = "${azi}° SE"
+            in 157.6f .. 202.5f -> string = "${azi}° S"
+            in 202.6f .. 247.5f -> string = "${azi}° SW"
+            in 247.6f .. 292.5f -> string = "${azi}° W"
+            in 292.6f .. 337.5f -> string = "${azi}° NW"
+            in 337.6f .. 360f -> string = "${azi}° N"
+        }
+        return string
     }
 
     private fun getMoons(date: LocalDateTime, long: Double): Pair<LocalDateTime, LocalDateTime> {
@@ -256,6 +300,8 @@ class MainActivity : AppCompatActivity() {
         var newDate = date
         var min = 1.0
         var fullDate = date
+        var newDateTemp: LocalDateTime
+        var fullDateTemp: LocalDateTime
 
         for (i in 0 .. 31) {
             val tempDate = date.plusDays(i.toLong())
@@ -271,9 +317,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        newDateTemp = newDate
+        fullDateTemp = fullDate
+
         for (i in -24 .. 24) {
-            val newTemp = newDate.plusHours(i.toLong())
-            val fullTemp = fullDate.plusHours(i.toLong())
+            val newTemp = newDateTemp.plusHours(i.toLong())
+            val fullTemp = fullDateTemp.plusHours(i.toLong())
             var newP = getFraction(jDate(Date.from(newTemp.toInstant(getTimeZoneOffset(long))).time.toDouble()))
             var fullP = getFraction(jDate(Date.from(fullTemp.toInstant(getTimeZoneOffset(long))).time.toDouble()))
 
@@ -286,15 +335,14 @@ class MainActivity : AppCompatActivity() {
                 fullDate = fullTemp
             }
         }
-        newDate = newDate.withMinute(0)
-        fullDate = fullDate.withMinute(0)
+        newDateTemp = newDate.withMinute(0)
+        fullDateTemp = fullDate.withMinute(0)
 
         for (i in -60 .. 60) {
-            val newTemp = newDate.plusMinutes(i.toLong())
-            val fullTemp = fullDate.plusMinutes(i.toLong())
+            val newTemp = newDateTemp.plusMinutes(i.toLong())
+            val fullTemp = fullDateTemp.plusMinutes(i.toLong())
             var newP = getFraction(jDate(Date.from(newTemp.toInstant(getTimeZoneOffset(long))).time.toDouble()))
             var fullP = getFraction(jDate(Date.from(fullTemp.toInstant(getTimeZoneOffset(long))).time.toDouble()))
-
             if (newP < min) {
                 min = newP
                 newDate = newTemp
@@ -312,7 +360,7 @@ class MainActivity : AppCompatActivity() {
         val arr = mutableListOf<Double>()
         var tempDate = date.withHour(0).withMinute(0)
         while (!tempDate.isAfter(date.withHour(0).withMinute(0).plusDays(1.toLong()))) {
-            arr.add((calcMoonPos(tempDate, lat, long).first*100).roundToInt().toDouble()/100)
+            arr.add(round2(calcMoonPos(tempDate, lat, long)[0]))
             tempDate = tempDate.plusMinutes(30)
         }
 
@@ -337,10 +385,10 @@ class MainActivity : AppCompatActivity() {
         val Mm2 = (idx2/altArr.size.toFloat())*1440f
         val Mm3 = (altArr.indexOf(altArr.minOrNull())/altArr.size.toFloat())*1440f
         val Mm4 = (altArr.indexOf(altArr.maxOrNull())/altArr.size.toFloat())*1440f
-        var tempDate1 = date.withHour(0).withMinute(0).plusMinutes(Mm1.toLong())
-        var tempDate2 = date.withHour(0).withMinute(0).plusMinutes(Mm2.toLong())
-        var tempDate3 = date.withHour(0).withMinute(0).plusMinutes(Mm3.toLong())
-        var tempDate4 = date.withHour(0).withMinute(0).plusMinutes(Mm4.toLong())
+        val tempDate1 = date.withHour(0).withMinute(0).plusMinutes(Mm1.toLong())
+        val tempDate2 = date.withHour(0).withMinute(0).plusMinutes(Mm2.toLong())
+        val tempDate3 = date.withHour(0).withMinute(0).plusMinutes(Mm3.toLong())
+        val tempDate4 = date.withHour(0).withMinute(0).plusMinutes(Mm4.toLong())
 
         var min1 = 128f
         var min2 = 128f
@@ -353,7 +401,7 @@ class MainActivity : AppCompatActivity() {
 
         for (i in -30 .. 30) {
             val tempDate = tempDate1.plusMinutes(i.toLong())
-            val alt = abs(calcMoonPos(tempDate, lat, long).first)
+            val alt = abs(calcMoonPos(tempDate, lat, long)[0])
             if (alt < min1) {
                 min1 = alt.toFloat()
                 date1 = tempDate
@@ -362,7 +410,7 @@ class MainActivity : AppCompatActivity() {
 
         for (i in -30 .. 30) {
             val tempDate = tempDate2.plusMinutes(i.toLong())
-            val alt = abs(calcMoonPos(tempDate, lat, long).first)
+            val alt = abs(calcMoonPos(tempDate, lat, long)[0])
             if (alt < min2) {
                 min2 = alt.toFloat()
                 date2 = tempDate
@@ -371,7 +419,7 @@ class MainActivity : AppCompatActivity() {
 
         for (i in -30 .. 30) {
             val tempDate = tempDate3.plusMinutes(i.toLong())
-            val alt = calcMoonPos(tempDate, lat, long).first
+            val alt = calcMoonPos(tempDate, lat, long)[0]
             if (alt < min3) {
                 min3 = alt.toFloat()
                 date3 = tempDate
@@ -380,14 +428,79 @@ class MainActivity : AppCompatActivity() {
 
         for (i in -30 .. 30) {
             val tempDate = tempDate4.plusMinutes(i.toLong())
-            val alt = calcMoonPos(tempDate, lat, long).first
+            val alt = calcMoonPos(tempDate, lat, long)[0]
             if (alt > max4) {
                 max4 = alt.toFloat()
                 date4 = tempDate
             }
         }
 
-        return mutableListOf(date1, date2, date3, date4)
+        if (calcMoonPos(date1.plusMinutes(30L), lat, long)[0] > 0) {
+            return mutableListOf(date1, date2, date3, date4)
+        } else {
+            return mutableListOf(date2, date1, date3, date4)
+        }
+    }
+
+    private fun getDistDates(date: LocalDateTime, lat: Double, long: Double): Pair<LocalDateTime, LocalDateTime> {
+        var max = 0.0
+        var perDate = date
+        var min = Double.MAX_VALUE
+        var apoDate = date
+        var perDateTemp: LocalDateTime
+        var apoDateTemp: LocalDateTime
+
+        for (i in 0 .. 31) {
+            val tempDate = date.plusDays(i.toLong())
+            var dist = calcMoonPos(tempDate, lat, long)[2]
+
+            if (dist < min) {
+                min = dist
+                perDate = tempDate
+            }
+            if (dist > max) {
+                max = dist
+                apoDate = tempDate
+            }
+        }
+
+        perDateTemp = perDate
+        apoDateTemp = apoDate
+
+        for (i in -24 .. 24) {
+            val perTemp = perDateTemp.plusHours(i.toLong())
+            val apoTemp = apoDateTemp.plusHours(i.toLong())
+            var perDist = calcMoonPos(perTemp, lat, long)[2]
+            var apoDist = calcMoonPos(apoTemp, lat, long)[2]
+
+            if (perDist < min) {
+                min = perDist
+                perDate = perTemp
+            }
+            if (apoDist > max) {
+                max = apoDist
+                apoDate = apoTemp
+            }
+        }
+        perDateTemp = perDate.withMinute(0)
+        apoDateTemp = apoDate.withMinute(0)
+
+        for (i in -60 .. 60) {
+            val perTemp = perDateTemp.plusMinutes(i.toLong())
+            val apoTemp = apoDateTemp.plusMinutes(i.toLong())
+            var perDist = calcMoonPos(perTemp, lat, long)[2]
+            var apoDist = calcMoonPos(apoTemp, lat, long)[2]
+            if (perDist < min) {
+                min = perDist
+                perDate = perTemp
+            }
+            if (apoDist > max) {
+                max = apoDist
+                apoDate = apoTemp
+            }
+        }
+
+        return Pair(perDate, apoDate)
     }
 
     private fun drawDaysLine(p: Double, icon: Bitmap): Bitmap {
@@ -517,6 +630,56 @@ class MainActivity : AppCompatActivity() {
         return bitmap
     }
 
+    private fun drawAziGraph(azi:Double, icon: Bitmap): Bitmap {
+        val width = aziBit.width
+        val height = aziBit.height
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        canvas.drawBitmap(aziBit, 0f, 0f, null)
+
+        val paint = Paint().apply {
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        }
+
+        val off = width/10
+        val size = 2*off
+        val del = off*2/5
+
+        val x = (cos((PI*(azi-90))/180) + 1)*(width/2-off)
+        val y = (sin((PI*(azi-90))/180) + 1)*(height/2-off)
+
+        canvas.drawOval(RectF((x-del).toFloat(), (y-del).toFloat(), (del+size+x).toFloat(), (del+size+y).toFloat()), paint)
+        canvas.drawBitmap(Bitmap.createScaledBitmap(icon, size.toInt(), size.toInt(), false), x.toFloat(), y.toFloat(), null)
+
+        return bitmap
+    }
+
+    private fun drawDistLine(dist: Double, distDates: Pair<LocalDateTime, LocalDateTime>, lat:Double, long:Double, icon: Bitmap): Bitmap? {
+        val width = distBit.width
+        val height = distBit.height
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        canvas.drawBitmap(distBit, 0f, 0f, null)
+
+        val paint = Paint().apply {
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        }
+
+        val per = calcMoonPos(distDates.first, lat, long)[2]
+        val apo = calcMoonPos(distDates.second, lat, long)[2]
+
+        val size = height
+        val offset = (width-size)*((dist-per)/(apo-per))
+        println(offset)
+
+        canvas.drawOval(RectF((offset-20f).toFloat(), -20f, (offset+size+20f).toFloat(),height+20f), paint)
+        canvas.drawBitmap(Bitmap.createScaledBitmap(icon, size, size, false), offset.toFloat(),0f, null)
+
+        return bitmap
+    }
+
     fun jDate(t: Double): Double {
         return (t / 86400000) + 2440587.5
     }
@@ -602,7 +765,28 @@ class MainActivity : AppCompatActivity() {
         return resultBitmap
     }
 
-    fun calcSunPos(date: LocalDateTime, latitude: Double, longitude: Double): Pair<Double, Double> {
+    private fun calcDistance(dist: Double, alt: Double, azi: Double, lat: Double, long: Double):Double {
+        val r = 6371
+
+        val latRad = Math.toRadians(lat)
+        val longRad = Math.toRadians(long)
+        val altRad = Math.toRadians(alt)
+        val aziRad = Math.toRadians(azi)
+
+        val xO = r * cos(latRad) * cos(longRad)
+        val yO = r * cos(latRad) * sin(longRad)
+        val zO = r * sin(latRad)
+
+        val xM = dist * cos(altRad) * cos(aziRad)
+        val yM = dist * cos(altRad) * sin(aziRad)
+        val zM = dist * sin(altRad)
+
+        val trueDist = sqrt((xM - xO).pow(2) + (yM - yO).pow(2) + (zM - zO).pow(2))
+
+        return trueDist
+    }
+
+    fun calcSunPos(date: LocalDateTime, latitude: Double, longitude: Double): MutableList<Double> {
         val timeZoneOffsetHours = ZoneId.systemDefault().rules.getOffset(date).totalSeconds / 3600.0
         val timeDate = date.minusHours(timeZoneOffsetHours.toLong())
         val julianDay = calcJday(timeDate)
@@ -624,10 +808,10 @@ class MainActivity : AppCompatActivity() {
         val solarAltitude = 90 - Math.toDegrees(solarZenith)
         val solarAzimuth = (Math.toDegrees(atan2(sin(Math.toRadians(hourAngle)), cos(Math.toRadians(hourAngle)) * sin(Math.toRadians(latitude)) - tan(sunDeclin) * cos(Math.toRadians(latitude)))) + 180) % 360
 
-        return Pair(solarAltitude, solarAzimuth)
+        return mutableListOf(solarAltitude, solarAzimuth)
     }
 
-    fun calcMoonPos(date: LocalDateTime, latitude: Double, longitude: Double): Pair<Double, Double> {
+    fun calcMoonPos(date: LocalDateTime, latitude: Double, longitude: Double): MutableList<Double> {
         val timeZoneOffsetHours = ZoneId.systemDefault().rules.getOffset(date).totalSeconds / 3600.0
         val timeDate = date.minusHours(timeZoneOffsetHours.toLong())
         val jd = calcJday(timeDate)
@@ -644,8 +828,9 @@ class MainActivity : AppCompatActivity() {
         val hourAngle = lst(timeDate, longitude) - moonRightAscension
         val moonAltitude = asin(sin(Math.toRadians(latitude)) * sin(Math.toRadians(moonDeclination)) + cos(Math.toRadians(latitude)) * cos(Math.toRadians(moonDeclination)) * cos(Math.toRadians(hourAngle))) * 180 / Math.PI
         val moonAzimuth = atan2(-sin(Math.toRadians(hourAngle)), tan(Math.toRadians(moonDeclination)) * cos(Math.toRadians(latitude)) - sin(Math.toRadians(latitude)) * cos(Math.toRadians(hourAngle))) * 180 / Math.PI
+        val moonDistance = (1 + (-20954 * cos(PI/180*mPrime) - 3699 * cos(PI/180*(2*d-mPrime)) - 2956 * cos(PI/180*(2*d))) / 384399)*383971.1175142792
 
-        return Pair(moonAltitude, (moonAzimuth + 360) % 360)
+        return mutableListOf(moonAltitude, (moonAzimuth + 360) % 360, moonDistance)
     }
 
     private fun lst(dateTime: LocalDateTime, longitude: Double): Double {

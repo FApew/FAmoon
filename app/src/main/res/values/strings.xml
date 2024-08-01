@@ -6,6 +6,7 @@
     <string name="outOf">out of</string>
     <string name="altitude">Altitude</string>
     <string name="azimuth" translatable="false">Azimuth</string>
+    <string name="distance">Distance</string>
     <string name="new_moon">New Moon</string>
     <string name="waxing_crescent">Waxing Crescent</string>
     <string name="first_quarter">First Quarter</string>
